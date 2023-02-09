@@ -32,3 +32,9 @@ node_modules
 
 # idea
 *.iml
+
+# typescript
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+tsconfig.tsbuildinfo
