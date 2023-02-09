@@ -1,0 +1,1 @@
+DELETE FROM sys_cassandra_migrations where file_name=:file_name;

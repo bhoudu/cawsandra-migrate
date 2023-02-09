@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS sys_cassandra_migrations(file_name TEXT, created_at TIMESTAMP, migration_number TEXT, title TEXT, PRIMARY KEY (file_name));

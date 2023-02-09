@@ -1,0 +1,1 @@
+INSERT INTO sys_cassandra_migrations(file_name, created_at, migration_number, title) values(:file_name, :created_at, :migration_number, :title);

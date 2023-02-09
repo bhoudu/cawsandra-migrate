@@ -1,0 +1,1 @@
+SELECT keyspace_name, table_name, status FROM system_schema_mcs.tables WHERE keyspace_name = :keyspace_name AND table_name = 'sys_cassandra_migrations';
