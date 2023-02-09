@@ -1,0 +1,26 @@
+name: Build & Test
+on:
+  push:
+    branches:
+    - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 18
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+    - run: yarn install --frozen-lockfile
+    - run: yarn lint
+    - run: yarn build
+    - run: yarn test
+    - run: yarn verify || true
+    - uses: actions/upload-artifact@v2
+      with:
+        name: reports
+        path: reports
