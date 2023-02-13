@@ -1,12 +1,14 @@
 import fs from 'fs';
 
-export function getTemplate(templateFilePath: string): string {
-  const dateString = Math.floor(Date.now() / 1000) + '';
+export function getTemplate(
+  templateFilePath: string,
+  migrationSuffix: string,
+): string {
   if (templateFilePath) {
     return fs.readFileSync(templateFilePath, { encoding: 'utf8' });
   }
   return `
-const migration${dateString} = {
+const migration${migrationSuffix} = {
   up: function (db, handler) {
     return Promise.resolve()
       .then(() => {
@@ -26,5 +28,5 @@ const migration${dateString} = {
   }
 }
 
-module.exports = migration${dateString}`;
+module.exports = migration${migrationSuffix}`;
 }
