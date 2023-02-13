@@ -2,6 +2,7 @@ import { Command } from "commander";
 import { help } from "./command/help";
 import fs from "fs";
 import path from "path";
+import { createMigration } from "./command/createMigration";
 
 // Parse version from package
 const packageJsonContent = fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8');
@@ -24,3 +25,14 @@ program
   .option('-m, --migrations "<pathToFolder>"', 'pass in folder to use for migration files');
 
 // Register commands
+
+// Define Create migration
+program
+  .command('create <title>')
+  .description('initialize a new migration file with title.')
+  .option('-t, --template "<template>"', 'sets the template for create')
+  .action((title, options) => {
+    const migrationsFolder = options.parent.migrations || process.cwd();
+    createMigration(title, options.template, migrationsFolder);
+    process.exit(0);
+  });
