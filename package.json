@@ -1,11 +1,17 @@
 {
   "name": "cawsandra-migrate",
-  "version": "1.0.1",
+  "version": "0.0.1",
   "description": "Fork of cassandra-migrate for AWS Keyspaces",
-  "main": "./app.js",
   "bin": {
-    "cassandra-migrate-aws": "./app.js"
+    "cawsandra": "./lib/cawsandra.js"
   },
+  "main": "lib/cawsandra.js",
+  "types": "lib/cawsandra.d.ts",
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bhoudu/cawsandra-migrate.git"
@@ -20,18 +26,15 @@
     "cql",
     "node"
   ],
+  "engines": {
+    "node": ">= 0.18.0"
+  },
   "author": "Benjamin Houdu",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bhoudu/cawsandra-migrate/issues"
   },
   "homepage": "https://github.com/bhoudu/cawsandra-migrate#readme",
-  "dependencies": {
-    "async": "^0.9.0",
-    "cassandra-driver": "^4.6.4",
-    "commander": "^2.8.1",
-    "winston": "^2.3.1"
-  },
   "scripts": {
     "prebuild": "rimraf lib",
     "build": "tsc -p tsconfig.json",
@@ -41,6 +44,11 @@
     "up": "node app.js up -m ./migrations -o ./migrations/options.js --create",
     "down": "node app.js down -m ./migrations -o ./migrations/options.js",
     "release": "semantic-release"
+  },
+  "dependencies": {
+    "aws-sigv4-auth-cassandra-plugin": "^1.0.4",
+    "cassandra-driver": "^4.6.4",
+    "commander": "^10.0.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.2",
