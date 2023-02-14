@@ -45,13 +45,15 @@ program
   .description('run pending migrations')
   .option('-n, --num "<number>"', 'run migrations up to a specified migration number')
   .option('-s, --skip "<number>"', 'adds the specified migration to the migration table without actually running it', false)
+  .option('-c, --create', 'Create the keyspace if it doesn\'t exist.')
   .option('--skipMigrationTableCheck', 'skips the check after asynchronous migration table creation on AWS, when you work locally with plain Cassandra for example')
   .action(async (options) => {
     const migrationsFolder = options.parent.migrations || process.cwd();
     const client = getCassandraClient(program);
     const num = options.num || 0;
+    const skip = options.skip || false;
     const skipMigrationTableCheck = options.skipMigrationTableCheck || false;
-    await migrateUpCommand(client, num, migrationsFolder, skipMigrationTableCheck);
+    await migrateUpCommand(client, num, skip, migrationsFolder, skipMigrationTableCheck);
     process.exit(0);
   });
 

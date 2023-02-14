@@ -4,6 +4,7 @@ import { program } from "../program";
 export async function migrateUpCommand(
   client: Client,
   num: number,
+  skip: boolean,
   migrationsFolder: string,
   skipMigrationsTableCheck: boolean,
 ): Promise<void> {
