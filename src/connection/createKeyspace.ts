@@ -1,8 +1,25 @@
-import cassandra from "cassandra-driver";
-import { getCassandraDriverOptions } from "./getCassandraDriverOptions";
+import cassandra, { DseClientOptions } from "cassandra-driver";
+
+export function getCassandraDriverOptions(settings: any): DseClientOptions {
+  let driverOptions = {} as any;
+  // TODO better parsing of option file
+  if (settings.optionFile) {
+    driverOptions = require(`${process.cwd()}/${settings.optionFile}`)
+  }
+  settings.hosts = (settings.hosts) ? settings.hosts.split(',') : undefined
+  let envHosts = (process.env.DBHOST) ? process.env.DBHOST.split(',') : undefined
+  let hosts = settings.hosts || envHosts
+  driverOptions.contactPoints = hosts || driverOptions.contactPoints || ['localhost']
+  const username = settings.username || process.env.DBUSER
+  const password = settings.password || process.env.DBPASSWORD
+  if (username && password) {
+    driverOptions.authProvider = new cassandra.auth.PlainTextAuthProvider(username, password)
+  }
+  return driverOptions;
+}
 
 export async function createKeyspace(
-  settings,
+  settings: any,
   keyspace: string,
 ): Promise<boolean> {
   console.log('Will create keyspace if it doesn\'t exist');
