@@ -1,7 +1,7 @@
 import fs from "fs";
-import { getTemplate } from "../migration/template";
+import { getTemplate } from "../migration/getTemplate";
 
-export function createMigration(
+export function createMigrationCommand(
   title: string,
   templateFile: string,
   migrationsFolder: string,

@@ -20,6 +20,6 @@ const usage = [
   ''
 ].join('\n');
 
-export function help(): void {
+export function helpCommand(): void {
   console.log(usage);
 }

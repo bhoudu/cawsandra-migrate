@@ -1,16 +1,18 @@
-import { Command } from "commander";
-import { help } from "./command/help";
 import fs from "fs";
 import path from "path";
-import { createMigration } from "./command/createMigration";
+import { Command } from "commander";
+import { helpCommand } from "./command/help.command";
+import { createMigrationCommand } from "./command/createMigration.command";
+import { getCassandraClient } from "./connection/getCassandraClient";
+import { migrateUpCommand } from "./command/migrateUp.command";
 
 // Parse version from package
 const packageJsonContent = fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8');
 const version = JSON.parse(packageJsonContent)?.version ?? 'unknown';
 
-// Define program & register help
+// Define program & register helpCommand
 export const program = new Command();
-program.on('--help', help);
+program.on('--helpCommand', helpCommand);
 
 // Add options
 program
@@ -33,6 +35,26 @@ program
   .option('-t, --template "<template>"', 'sets the template for create')
   .action((title, options) => {
     const migrationsFolder = options.parent.migrations || process.cwd();
-    createMigration(title, options.template, migrationsFolder);
+    createMigrationCommand(title, options.template, migrationsFolder);
     process.exit(0);
   });
+
+// Define Migrate up
+program
+  .command('up')
+  .description('run pending migrations')
+  .option('-n, --num "<number>"', 'run migrations up to a specified migration number')
+  .option('-s, --skip "<number>"', 'adds the specified migration to the migration table without actually running it', false)
+  .option('--skipMigrationTableCheck', 'skips the check after asynchronous migration table creation on AWS, when you work locally with plain Cassandra for example')
+  .action(async (options) => {
+    const migrationsFolder = options.parent.migrations || process.cwd();
+    const client = getCassandraClient(program);
+    const num = options.num || 0;
+    const skipMigrationTableCheck = options.skipMigrationTableCheck || false;
+    await migrateUpCommand(client, num, migrationsFolder, skipMigrationTableCheck);
+    process.exit(0);
+  });
+
+export async function main(): Promise<void> {
+  await program.parseAsync(process.argv);
+}
