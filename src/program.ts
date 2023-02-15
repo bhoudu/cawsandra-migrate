@@ -1,10 +1,13 @@
-import fs from "fs";
-import path from "path";
-import { Command } from "commander";
-import { helpCommand } from "./command/help.command";
-import { createMigrationCommand } from "./command/createMigration.command";
-import { getCassandraClient } from "./connection/getCassandraClient";
-import { migrateUpCommand } from "./command/migrateUp.command";
+import fs from 'fs';
+import path from 'path';
+import { Command } from 'commander';
+import { helpCommand } from './command/help.command';
+import { createMigrationCommand } from './command/createMigration.command';
+import { getCassandraClient } from './connection/getCassandraClient';
+import { migrateUpCommand } from './command/migrateUp.command';
+import { createKeyspace } from './connection/createKeyspace';
+import { createMigrationTable } from './connection/createMigrationTable';
+import { getMigrations } from './migration/getMigrations';
 
 // Parse version from package
 const packageJsonContent = fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8');
@@ -50,9 +53,26 @@ program
   .action(async (options) => {
     const migrationsFolder = options.parent.migrations || process.cwd();
     const client = getCassandraClient(program);
+    const keyspaceToCreate = options.create;
     const num = options.num || 0;
     const skip = options.skip || false;
     const skipMigrationTableCheck = options.skipMigrationTableCheck || false;
+    if (keyspaceToCreate) {
+      const testCreate = await createKeyspace(program, keyspaceToCreate);
+      if (testCreate) {
+        const migrationTableOk = await createMigrationTable(client, keyspaceToCreate, skipMigrationTableCheck);
+        if (migrationTableOk) {
+          // Test get migrations in Keyspace
+          await getMigrations(client);
+        } else {
+          console.log('Cannot create migration table!');
+          process.exit(1);
+        }
+      } else {
+        console.log('Cannot create keyspace!');
+        process.exit(1);
+      }
+    }
     await migrateUpCommand(client, num, skip, migrationsFolder, skipMigrationTableCheck);
     process.exit(0);
   });
