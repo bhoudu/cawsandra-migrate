@@ -1,4 +1,4 @@
-import cassandra, { DseClientOptions } from "cassandra-driver";
+import cassandra, { DseClientOptions } from 'cassandra-driver';
 
 export function getCassandraDriverOptions(settings: any): DseClientOptions {
   let driverOptions = {} as any;
@@ -43,5 +43,6 @@ export async function createKeyspace(
     .then(() => {
       cassandraClient.shutdown();
       return true;
-    }).catch(() => false);
+    })
+    .catch(() => false);
 }
