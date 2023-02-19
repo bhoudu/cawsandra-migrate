@@ -40,9 +40,13 @@
     "build": "tsc -p tsconfig.json",
     "test": "cross-env NODE_ENV?=test TZ=UTC jest --colors --detectOpenHandles --forceExit --no-cache --runInBand",
     "lint": "eslint 'src/**/*.ts' --fix-dry-run",
-    "create": "node app.js create 'test' -t ./migrations/template.tpl -m ./migrations",
-    "up": "node app.js up -m ./migrations -o ./migrations/options.js --create",
-    "down": "node app.js down -m ./migrations -o ./migrations/options.js",
+    "ping": "node lib/cawsandra.js ping",
+    "ping:ts": "ts-node src/cawsandra.ts ping",
+    "create": "node lib/program.js create 'test' -t ./migrations/template.tpl -m ./migrations",
+    "create:old": "node app.js create 'test' -t ./migrations/template.tpl -m ./migrations",
+    "up": "node lib/program.js up -m ./migrations -o ./migrations/options.js --create",
+    "up:old": "node app.js up -m ./migrations -o ./migrations/options.js --create",
+    "down:old": "node app.js down -m ./migrations -o ./migrations/options.js",
     "release": "semantic-release"
   },
   "dependencies": {
@@ -70,6 +74,7 @@
     "prettier": "^2.8.4",
     "semantic-release": "^20.1.0",
     "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }
 }
