@@ -7,7 +7,7 @@ export async function checkMigrationTable(
   try {
     const query = `SELECT keyspace_name, table_name, status
                    FROM system_schema_mcs.tables
-                   WHERE keyspace_name = ${keyspace}
+                   WHERE keyspace_name = '${keyspace}'
                      AND table_name = 'sys_cassandra_migrations'`;
     console.log(`Checking migration table status for keyspace ${keyspace}`);
     const response = await client.execute(query);
