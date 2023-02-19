@@ -42,9 +42,11 @@
     "lint": "eslint 'src/**/*.ts' --fix-dry-run",
     "ping": "node lib/cawsandra.js ping",
     "ping:ts": "ts-node src/cawsandra.ts ping",
+    "cql:ts": "ts-node src/cawsandra.ts cql ./resources/cql/selectMigrationTable.cql",
     "create": "node lib/program.js create 'test' -t ./migrations/template.tpl -m ./migrations",
+    "create:ts": "ts-node src/cawsandra.ts create test_me -m ./migrations",
     "create:old": "node app.js create 'test' -t ./migrations/template.tpl -m ./migrations",
-    "up": "node lib/program.js up -m ./migrations -o ./migrations/options.js --create",
+    "up": "ts-node src/cawsandra.ts up -m ./migrations",
     "up:old": "node app.js up -m ./migrations -o ./migrations/options.js --create",
     "down:old": "node app.js down -m ./migrations -o ./migrations/options.js",
     "release": "semantic-release"
