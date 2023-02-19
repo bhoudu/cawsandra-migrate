@@ -1,0 +1,1 @@
+SELECT cluster_name FROM system.local
