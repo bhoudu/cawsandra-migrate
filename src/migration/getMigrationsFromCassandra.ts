@@ -1,9 +1,9 @@
 import fs from 'fs';
 import { Client } from 'cassandra-driver';
 
-export async function getMigrations(
+export async function getMigrationsFromCassandra(
   client: Client,
-): Promise<any> {
+): Promise<Record<string, string>> {
   const query = fs.readFileSync('resources/cql/getMigration.cql', 'utf8');
   const result = await client.execute(query, null, { prepare: true });
   const filesRan = {};
