@@ -39,3 +39,6 @@ src/**/*.js.map
 src/**/*.d.ts
 tsconfig.tsbuildinfo
 lib
+
+# AWS
+.aws
